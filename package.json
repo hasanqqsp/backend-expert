@@ -18,6 +18,7 @@
   "dependencies": {
     "@hapi/hapi": "^20.1.5",
     "@hapi/jwt": "^2.0.1",
+    "auto-bind": "^5.0.1",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "instances-container": "^2.0.3",
@@ -26,9 +27,11 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
-    "eslint": "^7.30.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.23.4",
+    "eslint": "^8.42.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
     "jest": "^27.0.6",
     "node-pg-migrate": "^5.10.0",
     "nodemon": "^2.0.9"
