@@ -1,26 +1,26 @@
 /* istanbul ignore file */
-const pool = require('../src/Infrastructures/database/postgres/pool');
-const ThreadsTableTestHelper = require('./ThreadsTableTestHelper');
+const pool = require("../src/Infrastructures/database/postgres/pool");
+const ThreadsTableTestHelper = require("./ThreadsTableTestHelper");
 
 const CommentsTableTestHelper = {
   async addComment({
-    id = 'comment-123',
-    content = 'dicoding',
-    owner = 'user-123',
-    threadId = 'thread-123',
+    id = "comment-10-digitId",
+    content = "Ini adalah Komentar",
+    owner = "user-10-digitId",
+    threadId = "thread-10-digitId",
   }) {
     const query = {
-      text: 'INSERT INTO comments VALUES($1, $2, $3, $4)',
+      text: `INSERT INTO comments (id, content, owner, "threadId") VALUES($1, $2, $3, $4)`,
       values: [id, content, owner, threadId],
     };
 
     await pool.query(query);
   },
   async addCommentAndParent({
-    id = 'comment-123',
-    content = 'dicoding',
-    owner = 'user-123',
-    threadId = 'thread-123',
+    id = "comment-10-digitId",
+    content = "Ini adalah Komentar",
+    owner = "user-10-digitId",
+    threadId = "thread-10-digitId",
     username,
   }) {
     await ThreadsTableTestHelper.addThreadAndParent({
@@ -29,7 +29,7 @@ const CommentsTableTestHelper = {
       username,
     });
     const query = {
-      text: 'INSERT INTO comments VALUES($1, $2, $3, $4)',
+      text: `INSERT INTO comments (id, content, owner, "threadId") VALUES($1, $2, $3, $4)`,
       values: [id, content, owner, threadId],
     };
 
@@ -47,7 +47,7 @@ const CommentsTableTestHelper = {
 
   async findCommentsById(id) {
     const query = {
-      text: 'SELECT * FROM comments WHERE id = $1',
+      text: "SELECT * FROM comments WHERE id = $1",
       values: [id],
     };
 
@@ -56,14 +56,14 @@ const CommentsTableTestHelper = {
   },
   async deleteCommentById(id) {
     const query = {
-      text: 'UPDATE comments SET is_deleted = true WHERE id = $1',
+      text: "UPDATE comments SET is_deleted = true WHERE id = $1",
       values: [id],
     };
 
     await pool.query(query);
   },
   async cleanTable() {
-    await pool.query('DELETE FROM threads');
+    await pool.query("DELETE FROM threads");
   },
 };
 

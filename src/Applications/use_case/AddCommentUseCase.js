@@ -1,20 +1,19 @@
+const NewComment = require("../../Domains/comments/entities/NewComment");
 class AddCommentUseCase {
   constructor({ commentRepository, threadRepository }) {
     this._commentRepository = commentRepository;
     this._threadRepository = threadRepository;
   }
 
-  async execute(payload) {
-    await this._threadRepository.findThreadId(payload.threadId);
+  async execute({ content: payloadContent, threadId, owner }) {
+    await this._threadRepository.verifyIsThreadExists(threadId);
 
-    if (!payload.content) {
-      throw new Error("ADD_COMMENT.PAYLOAD.NOT_CONTAIN_NEEDED_PROPERTY");
-    }
-    if (typeof payload.content !== "string") {
-      throw new Error("ADD_COMMENT.PAYLOAD.NOT_MEET_DATA_TYPE_SPECIFICATION");
-    }
-
-    const addedComment = await this._commentRepository.addComment(payload);
+    const { content } = new NewComment({ content: payloadContent });
+    const addedComment = await this._commentRepository.addComment({
+      content,
+      threadId,
+      owner,
+    });
     return addedComment;
   }
 }

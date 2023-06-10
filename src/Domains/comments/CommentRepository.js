@@ -3,7 +3,7 @@ class CommentRepository {
     throw new Error("ADD_COMMENT.METHOD_NOT_IMPLEMENTED");
   }
 
-  async findCommentId() {
+  async verifyIsCommentExists() {
     throw new Error("ADD_COMMENT.METHOD_NOT_IMPLEMENTED");
   }
 

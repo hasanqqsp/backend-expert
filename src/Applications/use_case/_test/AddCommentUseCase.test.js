@@ -14,7 +14,7 @@ describe("AddCommentUseCase", () => {
     const mockAddedComment = new AddedComment({
       id: commentId,
       content,
-      owner,
+      owner: userId,
     });
 
     const mockCommentRepository = new CommentRepository();
@@ -23,7 +23,7 @@ describe("AddCommentUseCase", () => {
       .fn()
       .mockImplementation(() => Promise.resolve(mockAddedComment));
 
-    mockThreadRepository.findThreadId = jest
+    mockThreadRepository.verifyIsThreadExists = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
     const addCommentUseCase = new AddCommentUseCase({
@@ -35,9 +35,9 @@ describe("AddCommentUseCase", () => {
       owner: userId,
       threadId,
     });
-    expect(mockThreadRepository.findThreadId).toBeCalledWith(threadId);
+    expect(mockThreadRepository.verifyIsThreadExists).toBeCalledWith(threadId);
     expect(mockCommentRepository.addComment).toBeCalledWith({
-      content: commentPayload.content,
+      content,
       owner: userId,
       threadId,
     });

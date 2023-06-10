@@ -21,11 +21,11 @@ describe("AddReplyUseCase", () => {
     const mockCommentRepository = new CommentRepository();
     const mockReplyRepository = new ReplyRepository();
 
-    mockThreadRepository.findThreadId = jest
+    mockThreadRepository.verifyIsThreadExists = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
 
-    mockCommentRepository.findCommentId = jest
+    mockCommentRepository.verifyIsCommentExists = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
 
@@ -54,8 +54,10 @@ describe("AddReplyUseCase", () => {
       })
     );
 
-    expect(mockThreadRepository.findThreadId).toBeCalledWith(threadId);
-    expect(mockCommentRepository.findCommentId).toBeCalledWith(commentId);
+    expect(mockThreadRepository.verifyIsThreadExists).toBeCalledWith(threadId);
+    expect(mockCommentRepository.verifyIsCommentExists).toBeCalledWith(
+      commentId
+    );
     expect(mockReplyRepository.addReply({ commentId, content, owner: userId }));
   });
 });

@@ -5,17 +5,17 @@ class AddReplyUseCase {
     this._replyRepository = replyRepository;
   }
 
-  async execute({
-    threadId, commentId, credentialId, content,
-  }) {
-    await this._threadRepository.findThreadId(threadId);
-    await this._commentRepository.findCommentId(commentId);
+  async execute({ threadId, commentId, credentialId, content }) {
+    await this._threadRepository.verifyIsThreadExists(threadId);
+    await this._commentRepository.verifyIsCommentExists(commentId);
+
     if (!content) {
-      throw new Error('ADD_REPLY.PAYLOAD.NOT_CONTAIN_NEEDED_PROPERTY');
+      throw new Error("ADD_REPLY.PAYLOAD.NOT_CONTAIN_NEEDED_PROPERTY");
     }
-    if (typeof content !== 'string') {
-      throw new Error('ADD_REPLY.PAYLOAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    if (typeof content !== "string") {
+      throw new Error("ADD_REPLY.PAYLOAD.NOT_MEET_DATA_TYPE_SPECIFICATION");
     }
+
     const addedReply = await this._replyRepository.addReply({
       commentId,
       content,

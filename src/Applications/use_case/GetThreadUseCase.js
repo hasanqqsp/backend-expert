@@ -6,10 +6,10 @@ class GetThreadUseCase {
   }
 
   async execute({ threadId }) {
-    await this._threadRepository.findThreadId(threadId);
+    await this._threadRepository.verifyIsThreadExists(threadId);
     const thread = await this._threadRepository.getByThreadId(threadId);
     const { comments } = await this._commentRepository.getCommentsByThreadId(
-      threadId,
+      threadId
     );
 
     const commentsAndReplies = await Promise.all(
@@ -18,7 +18,7 @@ class GetThreadUseCase {
         replies: (
           await this._replyRepository.getRepliesByCommentId(comment.id)
         ).replies.map((item) => ({ ...item })),
-      })),
+      }))
     );
 
     return {

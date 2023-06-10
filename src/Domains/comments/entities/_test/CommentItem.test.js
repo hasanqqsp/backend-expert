@@ -1,41 +1,43 @@
-const CommentItem = require('../CommentItem');
+const CommentItem = require("../CommentItem");
 
-describe('a CommentItem entities', () => {
-  it('should throw error when payload did not contain needed property', () => {
+describe("a CommentItem entities", () => {
+  it("should throw error when payload did not contain needed property", () => {
     // Arrange
     const payload = {
-      id: '10digit-id',
-      content: 'Dicoding Indonesia',
+      id: "10digit-id",
+      content: "Dicoding Indonesia",
     };
 
     // Action and Assert
     expect(() => new CommentItem(payload)).toThrowError(
-      'COMMENT_ITEM.NOT_CONTAIN_NEEDED_PROPERTY',
+      "COMMENT_ITEM.NOT_CONTAIN_NEEDED_PROPERTY"
     );
   });
 
-  it('should throw error when payload did not meet data type specification', () => {
+  it("should throw error when payload did not meet data type specification", () => {
     // Arrange
     const payload = {
-      id: 'this-fake-id',
-      content: 'dicoding',
+      id: "this-fake-id",
+      content: "dicoding",
       username: {},
-      date: 2005,
+      created_at: 2005,
+      is_deleted: "",
     };
 
     // Action and Assert
     expect(() => new CommentItem(payload)).toThrowError(
-      'COMMENT_ITEM.NOT_MEET_DATA_TYPE_SPECIFICATION',
+      "COMMENT_ITEM.NOT_MEET_DATA_TYPE_SPECIFICATION"
     );
   });
 
-  it('should create commentItem object correctly', () => {
+  it("should create commentItem object correctly", () => {
     // Arrange
     const payload = {
-      id: 'comment-1',
-      username: 'dicoding',
-      date: '2021-08-08T07:26:21.338Z',
-      content: '**komentar telah dihapus**',
+      id: "comment-1",
+      username: "dicoding",
+      created_at: new Date("2021-08-08T07:26:21.338Z"),
+      content: "komentar",
+      is_deleted: true,
     };
 
     // Action
@@ -44,7 +46,7 @@ describe('a CommentItem entities', () => {
     // Assert
     expect(commentItem.id).toEqual(payload.id);
     expect(commentItem.username).toEqual(payload.username);
-    expect(commentItem.date).toEqual(payload.date);
-    expect(commentItem.content).toEqual(payload.content);
+    expect(commentItem.date).toEqual(payload.created_at);
+    expect(commentItem.content).toEqual("**komentar telah dihapus**");
   });
 });

@@ -5,12 +5,10 @@ class DeleteReplyUseCase {
     this._replyRepository = replyRepository;
   }
 
-  async execute({
-    threadId, commentId, credentialId, replyId,
-  }) {
-    await this._threadRepository.findThreadId(threadId);
-    await this._commentRepository.findCommentId(commentId);
-    await this._replyRepository.findReplyId(replyId);
+  async execute({ threadId, commentId, credentialId, replyId }) {
+    await this._threadRepository.verifyIsThreadExists(threadId);
+    await this._commentRepository.verifyIsCommentExists(commentId);
+    await this._replyRepository.verifyIsReplyExists(replyId);
     await this._replyRepository.verifyReplyOwner(replyId, credentialId);
     const isDeleted = await this._replyRepository.deleteReply(replyId);
     return isDeleted;

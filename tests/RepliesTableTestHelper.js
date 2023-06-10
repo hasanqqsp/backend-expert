@@ -1,27 +1,27 @@
 /* istanbul ignore file */
-const pool = require('../src/Infrastructures/database/postgres/pool');
-const CommentsTableTestHelper = require('./CommentsTableTestHelper');
+const pool = require("../src/Infrastructures/database/postgres/pool");
+const CommentsTableTestHelper = require("./CommentsTableTestHelper");
 
 const RepliesTableTestHelper = {
   async addReply({
-    id = 'reply-123',
-    content = 'dicoding',
-    owner = 'user-123',
-    commentId = 'comment-123',
+    id = "reply-10-digitId",
+    content = "Ini adalah Balasan",
+    owner = "user-10-digitId",
+    commentId = "comment-10-digitId",
   }) {
     const query = {
-      text: 'INSERT INTO replies VALUES($1, $2, $3, $4)',
+      text: "INSERT INTO replies VALUES($1, $2, $3, $4)",
       values: [id, content, owner, commentId],
     };
 
     await pool.query(query);
   },
   async addReplyAndParent({
-    id = 'reply-123',
-    content = 'dicoding',
-    owner = 'user-123',
-    commentId = 'comment-123',
-    username = 'dicoding',
+    id = "reply-10-digitId",
+    content = "Ini adalah Balasan",
+    owner = "user-10-digitId",
+    commentId = "comment-10-digitId",
+    username = "Ini adalah Balasan",
   }) {
     await CommentsTableTestHelper.addCommentAndParent({
       owner,
@@ -29,7 +29,7 @@ const RepliesTableTestHelper = {
       username,
     });
     const query = {
-      text: 'INSERT INTO replies VALUES($1, $2, $3, $4)',
+      text: "INSERT INTO replies VALUES($1, $2, $3, $4)",
       values: [id, content, owner, commentId],
     };
 
@@ -47,7 +47,7 @@ const RepliesTableTestHelper = {
 
   async findRepliesById(id) {
     const query = {
-      text: 'SELECT * FROM replies WHERE id = $1',
+      text: "SELECT * FROM replies WHERE id = $1",
       values: [id],
     };
 
@@ -56,14 +56,14 @@ const RepliesTableTestHelper = {
   },
   async deleteReplyById(id) {
     const query = {
-      text: 'UPDATE replies SET is_deleted = true WHERE id = $1',
+      text: "UPDATE replies SET is_deleted = true WHERE id = $1",
       values: [id],
     };
 
     await pool.query(query);
   },
   async cleanTable() {
-    await pool.query('DELETE FROM replies');
+    await pool.query("DELETE FROM replies");
   },
 };
 

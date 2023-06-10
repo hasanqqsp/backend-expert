@@ -23,7 +23,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     return new AddedThread({ ...rows[0] });
   }
 
-  async findThreadId(id) {
+  async verifyIsThreadExists(id) {
     const query = {
       text: "SELECT id FROM threads WHERE id = $1",
       values: [id],
@@ -37,7 +37,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
   async getByThreadId(id) {
     const query = {
-      text: `SELECT t.id, t.title, t.body, CAST(t.created_at AS TEXT) as date, u.username 
+      text: `SELECT t.id, t.title, t.body, t.created_at, u.username 
               FROM threads t JOIN users u ON t.owner = u.id  
               WHERE t.id = $1`,
       values: [id],
