@@ -36,7 +36,27 @@ describe("a ReplyItem entities", () => {
       id: "reply-1",
       username: "dicoding",
       created_at: new Date("2021-08-08T07:26:21.338Z"),
-      content: "reply",
+      content: "Ini adalah Komentar",
+      is_deleted: false,
+    };
+
+    // Action
+    const replyItem = new ReplyItem(payload);
+
+    // Assert
+    expect(replyItem.id).toEqual(payload.id);
+    expect(replyItem.username).toEqual(payload.username);
+    expect(replyItem.date).toEqual(payload.created_at);
+    expect(replyItem.content).toEqual("Ini adalah Komentar");
+  });
+
+  it("should create replyItem object correctly", () => {
+    // Arrange
+    const payload = {
+      id: "reply-1",
+      username: "dicoding",
+      created_at: new Date("2021-08-08T07:26:21.338Z"),
+      content: "Ini adalah Komentar",
       is_deleted: true,
     };
 

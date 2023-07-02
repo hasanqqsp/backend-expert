@@ -45,10 +45,10 @@ DomainErrorTranslator._directories = {
   "NEW_COMMENT.CONTENT.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
     "tidak dapat membuat komentar baru karena tipe data tidak sesuai"
   ),
-  "ADD_REPLY.PAYLOAD.NOT_CONTAIN_NEEDED_PROPERTY": new InvariantError(
+  "NEW_REPLY.NOT_CONTAIN_CONTENT": new InvariantError(
     "tidak dapat membuat balasan baru karena konten kosong"
   ),
-  "ADD_REPLY.PAYLOAD.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
+  "NEW_REPLY.CONTENT.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
     "tidak dapat membuat balasan baru karena tipe data tidak sesuai"
   ),
 };

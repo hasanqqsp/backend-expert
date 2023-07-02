@@ -50,11 +50,12 @@ class ReplyRepositoryPostgres {
 
   async deleteReply(id) {
     const query = {
-      text: "UPDATE replies SET is_deleted = true WHERE id = $1",
+      text: "UPDATE replies SET is_deleted = true WHERE id = $1 RETURNING is_deleted",
       values: [id],
     };
 
-    await this._pool.query(query);
+    const result = await this._pool.query(query);
+    return result.rows[0].is_deleted;
   }
 
   async getRepliesByCommentId(commentId) {

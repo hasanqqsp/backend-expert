@@ -79,7 +79,7 @@ describe("GetThreadUseCase", () => {
       {
         id: "reply-1",
         username: "johndoe",
-        created_at: new Date("2021-08-08T07:22:33.555Z"),
+        date: new Date("2021-08-08T07:22:33.555Z"),
         content: "sebuah comment",
       },
     ];
@@ -87,14 +87,14 @@ describe("GetThreadUseCase", () => {
       {
         id: "comment-1",
         username: "johndoe",
-        created_at: new Date("2021-08-08T07:22:33.555Z"),
+        date: new Date("2021-08-08T07:22:33.555Z"),
         content: "sebuah comment",
         replies,
       },
       {
         id: "comment-2",
         username: "dicoding",
-        created_at: new Date("2021-08-08T07:26:21.338Z"),
+        date: new Date("2021-08-08T07:26:21.338Z"),
         content: "**komentar telah dihapus**",
         replies: [],
       },
@@ -104,7 +104,7 @@ describe("GetThreadUseCase", () => {
       id: threadId,
       title: "sebuah thread",
       body: "sebuah body thread",
-      created_at: new Date("2021-08-08T07:19:09.775Z"),
+      date: new Date("2021-08-08T07:19:09.775Z"),
       username: "dicoding",
       comments,
     });

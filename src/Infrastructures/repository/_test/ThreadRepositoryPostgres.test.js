@@ -64,7 +64,7 @@ describe("ThreadRepositoryPostgres", () => {
       expect(addedThread).toStrictEqual(
         new AddedThread({
           id: "thread-10digit-id",
-          title: addedThread.title,
+          title: addThread.title,
           owner: fakeOwnerId,
         })
       );
@@ -88,13 +88,9 @@ describe("ThreadRepositoryPostgres", () => {
         pool,
         fakeIdGenerator
       );
-      await UsersTableTestHelper.addUser({ id: "user-10digit-id" });
-      await ThreadsTableTestHelper.addThread({
-        id: "thread-10digit-id",
-        owner: "user-10digit-id",
-      });
+      await ThreadsTableTestHelper.addThreadAndParent({});
       expect(
-        threadRepositoryPostgres.verifyIsThreadExists("thread-10digit-id")
+        threadRepositoryPostgres.verifyIsThreadExists("thread-10-digitId")
       ).resolves.not.toThrowError();
     });
   });
@@ -128,7 +124,7 @@ describe("ThreadRepositoryPostgres", () => {
       expect(thread.username).toEqual(username);
       expect(thread.title).toEqual(title);
       expect(thread.body).toEqual(body);
-      expect(thread.created_at).toBeDefined();
+      expect(thread.date).toBeDefined();
     });
   });
 });

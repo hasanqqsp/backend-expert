@@ -213,14 +213,14 @@ describe("ReplyRepositoryPostgres", () => {
       expect(replies[0].id).toEqual(`${id}1`);
       expect(replies[0].username).toEqual(username);
       expect(replies[0].content).toEqual("balasan pertama");
-      expect(replies[0].created_at).toBeInstanceOf(Date);
-      expect(replies[0].created_at).toBeDefined();
+      expect(replies[0].date).toBeInstanceOf(Date);
+      expect(replies[0].date).toBeDefined();
 
       expect(replies[1].id).toEqual(`${id}2`);
       expect(replies[1].username).toEqual(username);
       expect(replies[1].content).toEqual("**balasan telah dihapus**");
-      expect(replies[1].created_at).toBeInstanceOf(Date);
-      expect(replies[1].created_at).toBeDefined();
+      expect(replies[1].date).toBeInstanceOf(Date);
+      expect(replies[1].date).toBeDefined();
     });
   });
 });

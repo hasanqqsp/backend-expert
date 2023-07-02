@@ -36,7 +36,27 @@ describe("a CommentItem entities", () => {
       id: "comment-1",
       username: "dicoding",
       created_at: new Date("2021-08-08T07:26:21.338Z"),
-      content: "komentar",
+      content: "Ini adalah komentar",
+      is_deleted: false,
+    };
+
+    // Action
+    const commentItem = new CommentItem(payload);
+
+    // Assert
+    expect(commentItem.id).toEqual(payload.id);
+    expect(commentItem.username).toEqual(payload.username);
+    expect(commentItem.date).toEqual(payload.created_at);
+    expect(commentItem.content).toEqual(payload.content);
+  });
+
+  it("should create deleted commentItem object correctly", () => {
+    // Arrange
+    const payload = {
+      id: "comment-1",
+      username: "dicoding",
+      created_at: new Date("2021-08-08T07:26:21.338Z"),
+      content: "Ini adalah komentar",
       is_deleted: true,
     };
 

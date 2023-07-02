@@ -1,3 +1,5 @@
+const NewReply = require("../../Domains/replies/entities/NewReply");
+
 class AddReplyUseCase {
   constructor({ threadRepository, commentRepository, replyRepository }) {
     this._threadRepository = threadRepository;
@@ -8,17 +10,10 @@ class AddReplyUseCase {
   async execute({ threadId, commentId, credentialId, content }) {
     await this._threadRepository.verifyIsThreadExists(threadId);
     await this._commentRepository.verifyIsCommentExists(commentId);
-
-    if (!content) {
-      throw new Error("ADD_REPLY.PAYLOAD.NOT_CONTAIN_NEEDED_PROPERTY");
-    }
-    if (typeof content !== "string") {
-      throw new Error("ADD_REPLY.PAYLOAD.NOT_MEET_DATA_TYPE_SPECIFICATION");
-    }
-
+    const { content: newContent } = new NewReply({ content });
     const addedReply = await this._replyRepository.addReply({
       commentId,
-      content,
+      content: newContent,
       owner: credentialId,
     });
     return addedReply;

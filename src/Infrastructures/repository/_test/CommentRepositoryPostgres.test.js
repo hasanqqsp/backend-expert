@@ -200,14 +200,14 @@ describe("CommentRepositoryPostgres", () => {
       expect(comments[0].id).toEqual(`${commentId}1`);
       expect(comments[0].username).toEqual(username);
       expect(comments[0].content).toEqual(content);
-      expect(comments[0].created_at).toBeInstanceOf(Date);
-      expect(comments[0].created_at).toBeDefined();
+      expect(comments[0].date).toBeInstanceOf(Date);
+      expect(comments[0].date).toBeDefined();
 
       expect(comments[1].id).toEqual(`${commentId}2`);
       expect(comments[1].username).toEqual(username);
       expect(comments[1].content).toEqual(content);
-      expect(comments[1].created_at).toBeInstanceOf(Date);
-      expect(comments[1].created_at).toBeDefined();
+      expect(comments[1].date).toBeInstanceOf(Date);
+      expect(comments[1].date).toBeDefined();
     });
   });
 });

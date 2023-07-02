@@ -38,12 +38,12 @@ describe("a DetailThread entities", () => {
       created_at: new Date("2021-08-08T07:19:09.775Z"),
       username: "dandoeng",
     };
-    const { body, title, id, created_at, username } = new DetailThread(payload);
+    const { body, title, id, date, username } = new DetailThread(payload);
 
     expect(body).toEqual(payload.body);
     expect(title).toEqual(payload.title);
     expect(id).toEqual(payload.id);
-    expect(created_at).toEqual(payload.created_at);
+    expect(date).toEqual(payload.created_at);
     expect(username).toEqual(payload.username);
   });
 });
