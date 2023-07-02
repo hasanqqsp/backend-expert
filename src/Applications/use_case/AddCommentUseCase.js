@@ -1,4 +1,5 @@
 const NewComment = require("../../Domains/comments/entities/NewComment");
+
 class AddCommentUseCase {
   constructor({ commentRepository, threadRepository }) {
     this._commentRepository = commentRepository;

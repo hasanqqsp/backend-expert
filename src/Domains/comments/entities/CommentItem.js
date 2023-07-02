@@ -1,4 +1,4 @@
-const RepliesList = require("../../../Domains/replies/entities/RepliesList");
+/* eslint-disable camelcase */
 class CommentItem {
   constructor(payload) {
     this._verifyPayload(payload);

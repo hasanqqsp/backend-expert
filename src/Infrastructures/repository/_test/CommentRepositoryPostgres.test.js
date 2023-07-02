@@ -4,7 +4,6 @@ const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 const CommentRepositoryPostgres = require("../CommentRepositoryPostgres");
 const pool = require("../../database/postgres/pool");
 const AddedComment = require("../../../Domains/comments/entities/AddedComment");
-const CommentItem = require("../../../Domains/comments/entities/CommentItem");
 
 describe("CommentRepositoryPostgres", () => {
   beforeEach(async () => {

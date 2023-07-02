@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 class ReplyItem {
   constructor(payload) {
     this._verifyPayload(payload);
