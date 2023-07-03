@@ -20,6 +20,6 @@ describe("CommentRepository interface", () => {
     );
     await expect(
       commentRepository.getCommentsByThreadId()
-    ).rejects.toThrowError("ADD_COMMENT.METHOD_NOT_IMPLEMENTED");
+    ).rejects.toThrowError("COMMENT.METHOD_NOT_IMPLEMENTED");
   });
 });

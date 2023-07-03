@@ -5,6 +5,7 @@ const ReplyRepository = require("../../../Domains/replies/ReplyRepository");
 const DetailThread = require("../../../Domains/threads/entities/DetailThread");
 const CommentItem = require("../../../Domains/comments/entities/CommentItem");
 const ReplyItem = require("../../../Domains/replies/entities/ReplyItem");
+const LikesCommentRepository = require("../../../Domains/likesComment/LikesCommentRepository");
 
 describe("GetThreadUseCase", () => {
   it("should orchestrate the get thread action correctly", async () => {
@@ -44,9 +45,15 @@ describe("GetThreadUseCase", () => {
       username: "dicoding",
     });
 
+    const mockLikeCount = [
+      { count: "2", commentId: "comment-1" },
+      { count: "1", commentId: "comment-2" },
+    ];
+
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
     const mockReplyRepository = new ReplyRepository();
+    const mockLikesCommentRepository = new LikesCommentRepository();
     mockThreadRepository.verifyIsThreadExists = jest.fn(() =>
       Promise.resolve()
     );
@@ -62,10 +69,15 @@ describe("GetThreadUseCase", () => {
       Promise.resolve(mockRepliesOnComments)
     );
 
+    mockLikesCommentRepository.getLikeCountByCommentsId = jest.fn(() =>
+      Promise.resolve(mockLikeCount)
+    );
+
     const getThreadUseCase = new GetThreadUseCase({
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
       replyRepository: mockReplyRepository,
+      likesCommentRepository: mockLikesCommentRepository,
     });
 
     const thread = await getThreadUseCase.execute({ threadId });
@@ -86,6 +98,7 @@ describe("GetThreadUseCase", () => {
         date: new Date("2021-08-08T07:22:33.555Z"),
         content: "sebuah comment",
         replies,
+        likeCount: 2,
       },
       {
         id: "comment-2",
@@ -93,6 +106,7 @@ describe("GetThreadUseCase", () => {
         date: new Date("2021-08-08T07:26:21.338Z"),
         content: "**komentar telah dihapus**",
         replies: [],
+        likeCount: 1,
       },
     ];
 
@@ -109,6 +123,10 @@ describe("GetThreadUseCase", () => {
     expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(
       threadId
     );
+    expect(mockLikesCommentRepository.getLikeCountByCommentsId).toBeCalledWith([
+      "comment-1",
+      "comment-2",
+    ]);
     expect(mockReplyRepository.getRepliesByCommentsId).toBeCalledWith([
       "comment-1",
       "comment-2",
