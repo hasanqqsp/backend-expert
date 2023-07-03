@@ -16,7 +16,6 @@ class ReplyRepositoryPostgres {
     };
 
     const result = await this._pool.query(query);
-    console.log(new AddedReply(result.rows[0]));
     return new AddedReply(result.rows[0]);
   }
 
