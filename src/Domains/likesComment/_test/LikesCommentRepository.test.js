@@ -15,5 +15,8 @@ describe("LikesCommentRepository interface", () => {
     await expect(
       likesCommentRepository.verifyIsCommentLiked({})
     ).rejects.toThrowError("LIKES_COMMENT.METHOD_NOT_IMPLEMENTED");
+    await expect(
+      likesCommentRepository.getLikeCountByCommentsId({})
+    ).rejects.toThrowError("LIKES_COMMENT.METHOD_NOT_IMPLEMENTED");
   });
 });

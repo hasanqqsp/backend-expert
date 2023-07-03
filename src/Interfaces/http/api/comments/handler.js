@@ -1,12 +1,10 @@
 const AddCommentUseCase = require("../../../../Applications/use_case/AddCommentUseCase");
 const DeleteCommentUseCase = require("../../../../Applications/use_case/DeleteCommentUseCase");
+const ToggleLikeCommentUseCase = require("../../../../Applications/use_case/ToggleLikeCommentUseCase");
 
 class ThreadHandler {
   constructor(container) {
     this._container = container;
-
-    this.postCommentHandler = this.postCommentHandler.bind(this);
-    this.deleteCommentHandler = this.deleteCommentHandler.bind(this);
   }
 
   async postCommentHandler(request, h) {
@@ -38,6 +36,23 @@ class ThreadHandler {
       DeleteCommentUseCase.name
     );
     await getDeleteCommentUseCase.execute({
+      threadId,
+      commentId,
+      credentialId,
+    });
+
+    return {
+      status: "success",
+    };
+  }
+
+  async putCommentLikeHandler(request) {
+    const { threadId, commentId } = request.params;
+    const { id: credentialId } = request.auth.credentials;
+    const getToggleLikeCommentUseCase = this._container.getInstance(
+      ToggleLikeCommentUseCase.name
+    );
+    await getToggleLikeCommentUseCase.execute({
       threadId,
       commentId,
       credentialId,

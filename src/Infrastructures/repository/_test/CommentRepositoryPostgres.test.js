@@ -7,11 +7,6 @@ const AddedComment = require("../../../Domains/comments/entities/AddedComment");
 const CommentItem = require("../../../Domains/comments/entities/CommentItem");
 
 describe("CommentRepositoryPostgres", () => {
-  // beforeEach(async () => {
-  //   await ThreadsTableTestHelper.cleanTable();
-  //   await UsersTableTestHelper.cleanTable();
-  //   await CommentsTableTestHelper.cleanTable();
-  // });
   beforeEach(async () => {
     await ThreadsTableTestHelper.addThreadAndParent({});
   });

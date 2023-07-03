@@ -5,11 +5,13 @@ exports.up = (pgm) => {
     userId: {
       type: "VARCHAR(50)",
       references: "users",
+      onDelete: "CASCADE",
       notNull: true,
     },
     commentId: {
       type: "VARCHAR(50)",
       references: "comments",
+      onDelete: "CASCADE",
       notNull: true,
     },
   });
