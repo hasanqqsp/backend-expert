@@ -2,7 +2,6 @@ const AddedComment = require("../../Domains/comments/entities/AddedComment");
 const ThreadRepository = require("../../Domains/threads/ThreadRepository");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
-const ListComments = require("../../Domains/comments/entities/ListComments");
 const CommentItem = require("../../Domains/comments/entities/CommentItem");
 
 class CommentRepositoryPostgres extends ThreadRepository {
@@ -20,7 +19,7 @@ class CommentRepositoryPostgres extends ThreadRepository {
     };
 
     const result = await this._pool.query(query);
-    return new AddedComment({ ...result.rows[0] });
+    return new AddedComment(result.rows[0]);
   }
 
   async verifyIsCommentExists(id) {
@@ -69,7 +68,7 @@ class CommentRepositoryPostgres extends ThreadRepository {
       values: [id],
     };
     const result = await this._pool.query(query);
-    return new ListComments(result.rows.map((row) => new CommentItem(row)));
+    return result.rows.map((row) => new CommentItem(row));
   }
 }
 

@@ -4,18 +4,23 @@ const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 const CommentRepositoryPostgres = require("../CommentRepositoryPostgres");
 const pool = require("../../database/postgres/pool");
 const AddedComment = require("../../../Domains/comments/entities/AddedComment");
+const CommentItem = require("../../../Domains/comments/entities/CommentItem");
 
 describe("CommentRepositoryPostgres", () => {
+  // beforeEach(async () => {
+  //   await ThreadsTableTestHelper.cleanTable();
+  //   await UsersTableTestHelper.cleanTable();
+  //   await CommentsTableTestHelper.cleanTable();
+  // });
   beforeEach(async () => {
+    await ThreadsTableTestHelper.addThreadAndParent({});
+  });
+  afterEach(async () => {
     await ThreadsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
     await CommentsTableTestHelper.cleanTable();
   });
-
   afterAll(async () => {
-    await ThreadsTableTestHelper.cleanTable();
-    await UsersTableTestHelper.cleanTable();
-    await CommentsTableTestHelper.cleanTable();
     await pool.end();
   });
 
@@ -27,7 +32,6 @@ describe("CommentRepositoryPostgres", () => {
         fakeIdGenerator
       );
 
-      await ThreadsTableTestHelper.addThreadAndParent({});
       const content = "Ini adalah komentar";
 
       await commentRepositoryPostgres.addComment({
@@ -50,7 +54,6 @@ describe("CommentRepositoryPostgres", () => {
         fakeIdGenerator
       );
 
-      await ThreadsTableTestHelper.addThreadAndParent({});
       const content = "Ini adalah komentar";
       const addedComment = await commentRepositoryPostgres.addComment({
         content,
@@ -89,12 +92,10 @@ describe("CommentRepositoryPostgres", () => {
       const owner = "user-10-digitId";
       const commentId = "comment-10-digitId";
 
-      await CommentsTableTestHelper.addCommentAndParent({
+      await CommentsTableTestHelper.addComment({
         id: commentId,
         owner,
       });
-      await CommentsTableTestHelper.findCommentsById(commentId);
-      // entah kenapa pengujian gagal jika tidak ditambahkan baris ini, mungkin bisa dijelaskan
       expect(
         commentRepositoryPostgres.verifyIsCommentExists(commentId)
       ).resolves.not.toThrowError();
@@ -120,7 +121,7 @@ describe("CommentRepositoryPostgres", () => {
         fakeIdGenerator
       );
 
-      await CommentsTableTestHelper.addCommentAndParent({});
+      await CommentsTableTestHelper.addComment({});
       expect(
         commentRepositoryPostgres.verifyCommentOwner(
           "comment-10-digitId",
@@ -135,7 +136,7 @@ describe("CommentRepositoryPostgres", () => {
         fakeIdGenerator
       );
 
-      await CommentsTableTestHelper.addCommentAndParent({});
+      await CommentsTableTestHelper.addComment({});
       await CommentsTableTestHelper.findCommentsById("comment-10-digitId");
       expect(
         commentRepositoryPostgres.verifyCommentOwner(
@@ -154,7 +155,7 @@ describe("CommentRepositoryPostgres", () => {
         fakeIdGenerator
       );
 
-      await CommentsTableTestHelper.addCommentAndParent({});
+      await CommentsTableTestHelper.addComment({});
 
       const comments = await CommentsTableTestHelper.findCommentsById(
         "comment-10-digitId"
@@ -180,33 +181,40 @@ describe("CommentRepositoryPostgres", () => {
       );
 
       const commentId = "comment-10digitId";
-      const username = "dicoding";
-      const content = "Ini adalah Komentar";
 
-      await CommentsTableTestHelper.addCommentAndParent({
+      const expected = [
+        new CommentItem({
+          id: `${commentId}1`,
+          username: "dicoding",
+          content: "Ini adalah Komentar 1",
+          created_at: new Date("2021-08-08T07:22:33.555Z"),
+          is_deleted: false,
+        }),
+        new CommentItem({
+          id: `${commentId}2`,
+          username: "dicoding",
+          content: "Ini adalah Komentar 2",
+          created_at: new Date("2021-09-08T07:22:33.555Z"),
+          is_deleted: false,
+        }),
+      ];
+
+      await CommentsTableTestHelper.addComment({
         id: `${commentId}1`,
+        date: new Date("2021-08-08T07:22:33.555Z"),
+        content: "Ini adalah Komentar 1",
       });
       await CommentsTableTestHelper.addComment({
         id: `${commentId}2`,
+        date: new Date("2021-09-08T07:22:33.555Z"),
+        content: "Ini adalah Komentar 2",
       });
 
-      const { comments } =
-        await commentRepositoryPostgres.getCommentsByThreadId(
-          "thread-10-digitId"
-        );
-      expect(comments).toHaveLength(2);
+      const comments = await commentRepositoryPostgres.getCommentsByThreadId(
+        "thread-10-digitId"
+      );
 
-      expect(comments[0].id).toEqual(`${commentId}1`);
-      expect(comments[0].username).toEqual(username);
-      expect(comments[0].content).toEqual(content);
-      expect(comments[0].date).toBeInstanceOf(Date);
-      expect(comments[0].date).toBeDefined();
-
-      expect(comments[1].id).toEqual(`${commentId}2`);
-      expect(comments[1].username).toEqual(username);
-      expect(comments[1].content).toEqual(content);
-      expect(comments[1].date).toBeInstanceOf(Date);
-      expect(comments[1].date).toBeDefined();
+      expect(comments).toStrictEqual(expected);
     });
   });
 });

@@ -1,12 +1,24 @@
 class NewComment {
-  constructor({ content }) {
-    if (!content) {
-      throw new Error("NEW_COMMENT.NOT_CONTAIN_CONTENT");
+  constructor(payload) {
+    this._verifyPayload(payload);
+
+    this.threadId = payload.threadId;
+    this.content = payload.content;
+    this.owner = payload.owner;
+  }
+
+  _verifyPayload({ threadId, content, owner }) {
+    if (!threadId || !content || !owner) {
+      throw new Error("NEW_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY");
     }
-    if (typeof content !== "string") {
-      throw new Error("NEW_COMMENT.CONTENT.NOT_MEET_DATA_TYPE_SPECIFICATION");
+
+    if (
+      typeof threadId !== "string" ||
+      typeof content !== "string" ||
+      typeof owner !== "string"
+    ) {
+      throw new Error("NEW_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION");
     }
-    this.content = content;
   }
 }
 module.exports = NewComment;

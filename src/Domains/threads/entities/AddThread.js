@@ -2,17 +2,22 @@ class AddThread {
   constructor(payload) {
     this._verifyPayload(payload);
 
-    const { title, body } = payload;
+    const { title, body, ownerId } = payload;
     this.title = title;
     this.body = body;
+    this.ownerId = ownerId;
   }
 
-  _verifyPayload({ title, body }) {
-    if (!title || !body) {
-      throw new Error('ADD_THREAD.PAYLOAD.NOT_CONTAIN_NEEDED_PROPERTY');
+  _verifyPayload({ title, body, ownerId }) {
+    if (!title || !body || !ownerId) {
+      throw new Error("ADD_THREAD.PAYLOAD.NOT_CONTAIN_NEEDED_PROPERTY");
     }
-    if (typeof title !== 'string' || typeof body !== 'string') {
-      throw new Error('ADD_THREAD.PAYLOAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    if (
+      typeof title !== "string" ||
+      typeof body !== "string" ||
+      typeof ownerId !== "string"
+    ) {
+      throw new Error("ADD_THREAD.PAYLOAD.NOT_MEET_DATA_TYPE_SPECIFICATION");
     }
   }
 }

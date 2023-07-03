@@ -8,9 +8,7 @@ class DeleteCommentUseCase {
     await this._threadRepository.verifyIsThreadExists(threadId);
     await this._commentRepository.verifyIsCommentExists(commentId);
     await this._commentRepository.verifyCommentOwner(commentId, credentialId);
-
-    const isDeleted = await this._commentRepository.deleteComment(commentId);
-    return isDeleted;
+    await this._commentRepository.deleteComment(commentId);
   }
 }
 

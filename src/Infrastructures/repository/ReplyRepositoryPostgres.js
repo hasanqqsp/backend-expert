@@ -1,7 +1,6 @@
 const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const AddedReply = require("../../Domains/replies/entities/AddedReply");
-const RepliesList = require("../../Domains/replies/entities/RepliesList");
 const ReplyItem = require("../../Domains/replies/entities/ReplyItem");
 
 class ReplyRepositoryPostgres {
@@ -18,6 +17,7 @@ class ReplyRepositoryPostgres {
     };
 
     const result = await this._pool.query(query);
+    console.log(new AddedReply(result.rows[0]));
     return new AddedReply(result.rows[0]);
   }
 
@@ -58,18 +58,19 @@ class ReplyRepositoryPostgres {
     return result.rows[0].is_deleted;
   }
 
-  async getRepliesByCommentId(commentId) {
+  async getRepliesByCommentsId(commentIds) {
     const query = {
-      text: `SELECT  r.content, 
-            r.created_at, u.username, r.id, r.is_deleted
-            FROM replies r JOIN users u ON u.id = r.owner 
-            WHERE "commentId" = $1 ORDER BY r.created_at ASC`,
-      values: [commentId],
+      text: `SELECT r.content, r."commentId", r.created_at, u.username, r.id, r.is_deleted
+            FROM replies r
+            INNER JOIN users u ON u.id = r.owner
+            WHERE r."commentId" = ANY($1::text[])
+            ORDER BY r.created_at ASC`,
+      values: [commentIds],
     };
 
     const result = await this._pool.query(query);
 
-    return new RepliesList(result.rows.map((item) => new ReplyItem(item)));
+    return result.rows;
   }
 }
 

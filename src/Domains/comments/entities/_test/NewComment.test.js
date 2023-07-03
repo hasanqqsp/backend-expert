@@ -4,12 +4,12 @@ describe("a NewComment entities", () => {
   it("should throw error when payload did not contain needed property", () => {
     // Arrange
     const payload = {
-      contaent: "Dicoding Indonesia",
+      content: "Dicoding Indonesia",
     };
 
     // Action and Assert
     expect(() => new NewComment(payload)).toThrowError(
-      "NEW_COMMENT.NOT_CONTAIN_CONTENT"
+      "NEW_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY"
     );
   });
 
@@ -17,11 +17,13 @@ describe("a NewComment entities", () => {
     // Arrange
     const payload = {
       content: 123,
+      threadId: "thread-10-DigitId",
+      owner: "user-10-digitId",
     };
 
     // Action and Assert
     expect(() => new NewComment(payload)).toThrowError(
-      "NEW_COMMENT.CONTENT.NOT_MEET_DATA_TYPE_SPECIFICATION"
+      "NEW_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION"
     );
   });
 
@@ -29,6 +31,8 @@ describe("a NewComment entities", () => {
     // Arrange
     const payload = {
       content: "Dicoding Indonesia",
+      threadId: "thread-10-DigitId",
+      owner: "user-10-digitId",
     };
 
     // Action

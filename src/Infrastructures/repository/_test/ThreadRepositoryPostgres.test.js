@@ -7,14 +7,19 @@ const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
 
 describe("ThreadRepositoryPostgres", () => {
+  // beforeEach(async () => {
+  //   await ThreadsTableTestHelper.cleanTable();
+  //   await UsersTableTestHelper.cleanTable();
+  // });
+
   beforeEach(async () => {
-    await ThreadsTableTestHelper.cleanTable();
+    await UsersTableTestHelper.addUser({});
+  });
+  afterEach(async () => {
     await UsersTableTestHelper.cleanTable();
   });
 
   afterAll(async () => {
-    await ThreadsTableTestHelper.cleanTable();
-    await UsersTableTestHelper.cleanTable();
     await pool.end();
   });
 
@@ -24,16 +29,16 @@ describe("ThreadRepositoryPostgres", () => {
       const addThread = new AddThread({
         title: "Dicoding Indonesia",
         body: "Dicoding Indonesia",
+        ownerId: "user-10-digitId",
       });
       const fakeIdGenerator = () => "10digit-id"; // stub!
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(
         pool,
         fakeIdGenerator
       );
-      const fakeOwnerId = "user-fake-owner";
-      await UsersTableTestHelper.addUser({ id: fakeOwnerId });
+
       // Action
-      await threadRepositoryPostgres.addThread(addThread, fakeOwnerId);
+      await threadRepositoryPostgres.addThread(addThread);
 
       // Assert
       const threads = await ThreadsTableTestHelper.findThreadsById(
@@ -46,32 +51,40 @@ describe("ThreadRepositoryPostgres", () => {
       const addThread = new AddThread({
         title: "Dicoding Indonesia",
         body: "Dicoding Indonesia",
+        ownerId: "user-10-digitId",
       });
       const fakeIdGenerator = () => "10digit-id"; // stub!
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(
         pool,
         fakeIdGenerator
       );
-      const fakeOwnerId = "user-fake-owner";
-      await UsersTableTestHelper.addUser({ id: fakeOwnerId });
       // Action
-      const addedThread = await threadRepositoryPostgres.addThread(
-        addThread,
-        fakeOwnerId
-      );
+      const addedThread = await threadRepositoryPostgres.addThread(addThread);
 
       // Assert
       expect(addedThread).toStrictEqual(
         new AddedThread({
           id: "thread-10digit-id",
           title: addThread.title,
-          owner: fakeOwnerId,
+          owner: "user-10-digitId",
         })
       );
     });
   });
 
   describe("verifyIsThreadExists function", () => {
+    it("should not throw error when given id saved in database", async () => {
+      const fakeIdGenerator = () => "10-digitId";
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(
+        pool,
+        fakeIdGenerator
+      );
+      await ThreadsTableTestHelper.addThread({});
+      expect(
+        threadRepositoryPostgres.verifyIsThreadExists("thread-10-digitId")
+      ).resolves.not.toThrowError();
+    });
+
     it("should throw NotFoundError when given id not saved in database", async () => {
       const fakeIdGenerator = () => {};
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(
@@ -82,17 +95,6 @@ describe("ThreadRepositoryPostgres", () => {
         threadRepositoryPostgres.verifyIsThreadExists("fake-bad-id")
       ).rejects.toThrowError(new NotFoundError("thread tidak ditemukan"));
     });
-    it("should not throw error when given id saved in database", async () => {
-      const fakeIdGenerator = () => "comment-10digit-id";
-      const threadRepositoryPostgres = new ThreadRepositoryPostgres(
-        pool,
-        fakeIdGenerator
-      );
-      await ThreadsTableTestHelper.addThreadAndParent({});
-      expect(
-        threadRepositoryPostgres.verifyIsThreadExists("thread-10-digitId")
-      ).resolves.not.toThrowError();
-    });
   });
 
   describe("getThreadById function", () => {
@@ -102,20 +104,15 @@ describe("ThreadRepositoryPostgres", () => {
         pool,
         fakeIdGenerator
       );
-      const userId = "user-10digit-id";
       const threadId = "thread-10digit-id";
       const username = "dicoding";
       const title = "Ini adalah Judul";
       const body = "Ini adalah Body";
-      await UsersTableTestHelper.addUser({
-        id: userId,
-        username,
-      });
+
       await ThreadsTableTestHelper.addThread({
         id: threadId,
         title,
         body,
-        owner: userId,
       });
 
       const thread = await threadRepositoryPostgres.getByThreadId(threadId);

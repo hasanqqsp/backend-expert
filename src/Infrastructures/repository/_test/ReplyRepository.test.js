@@ -10,6 +10,9 @@ const AuthorizationError = require("../../../Commons/exceptions/AuthorizationErr
 
 describe("ReplyRepositoryPostgres", () => {
   beforeEach(async () => {
+    await CommentsTableTestHelper.addCommentAndParent({});
+  });
+  afterEach(async () => {
     await ThreadsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
     await CommentsTableTestHelper.cleanTable();
@@ -22,18 +25,15 @@ describe("ReplyRepositoryPostgres", () => {
 
   describe("addReply function", () => {
     it("should persist the reply data", async () => {
-      const fakeIdGenerator = () => "10digit-id";
+      const fakeIdGenerator = () => "10-digitId";
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(
         pool,
         fakeIdGenerator
       );
       const content = "Ini adalah balasan";
-      const commentId = "comment-10digit-id";
-      const owner = "user-10digit-id";
-      await CommentsTableTestHelper.addCommentAndParent({
-        id: commentId,
-        owner,
-      });
+      const commentId = "comment-10-digitId";
+      const owner = "user-10-digitId";
+
       await replyRepositoryPostgres.addReply({
         content,
         owner,
@@ -47,18 +47,15 @@ describe("ReplyRepositoryPostgres", () => {
       expect(replies).toHaveLength(1);
     });
     it("should return addedReply correctly", async () => {
-      const fakeIdGenerator = () => "10digit-id";
+      const fakeIdGenerator = () => "10-digitId";
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(
         pool,
         fakeIdGenerator
       );
       const content = "Ini adalah balasan";
-      const commentId = "comment-10digit-id";
-      const owner = "user-10digit-id";
-      await CommentsTableTestHelper.addCommentAndParent({
-        id: commentId,
-        owner,
-      });
+      const commentId = "comment-10-digitId";
+      const owner = "user-10-digitId";
+
       const addedReply = await replyRepositoryPostgres.addReply({
         content,
         owner,
@@ -67,7 +64,7 @@ describe("ReplyRepositoryPostgres", () => {
 
       expect(addedReply).toStrictEqual(
         new AddedReply({
-          id: "reply-10digit-id",
+          id: "reply-10-digitId",
           content,
           owner,
         })
@@ -91,7 +88,7 @@ describe("ReplyRepositoryPostgres", () => {
         pool,
         () => {}
       );
-      await RepliesTableTestHelper.addReplyAndParent({
+      await RepliesTableTestHelper.addReply({
         id: "reply-10-digitId",
       });
       await RepliesTableTestHelper.findRepliesById("reply-10-digitId");
@@ -122,7 +119,7 @@ describe("ReplyRepositoryPostgres", () => {
       const replyId = "reply-10-digitId";
       const owner = "user-10-digitId";
 
-      await RepliesTableTestHelper.addReplyAndParent({
+      await RepliesTableTestHelper.addReply({
         id: replyId,
         owner,
       });
@@ -142,7 +139,7 @@ describe("ReplyRepositoryPostgres", () => {
       );
       const id = "reply-10-digitId";
       const owner = "user-10-digitId";
-      await RepliesTableTestHelper.addReplyAndParent({
+      await RepliesTableTestHelper.addReply({
         id,
         owner,
       });
@@ -162,7 +159,7 @@ describe("ReplyRepositoryPostgres", () => {
       );
       const replyId = "reply-10-digitId";
       const owner = "user-10-digitId";
-      await RepliesTableTestHelper.addReplyAndParent({
+      await RepliesTableTestHelper.addReply({
         id: replyId,
         owner,
       });
@@ -172,55 +169,59 @@ describe("ReplyRepositoryPostgres", () => {
 
       await replyRepositoryPostgres.deleteReply(replyId);
 
-      const deletedComment = await await RepliesTableTestHelper.findRepliesById(
+      const deletedComment = await RepliesTableTestHelper.findRepliesById(
         replyId
       );
 
       expect(deletedComment[0].is_deleted).toEqual(true);
     });
   });
-  describe("getRepliesByCommentId function", () => {
+  describe("getRepliesByCommentsId function", () => {
     it("should return correct list of replies", async () => {
       const fakeIdGenerator = () => {};
       const replyRepositoryPostgres = new ReplyRepositoryPostgres(
         pool,
         fakeIdGenerator
       );
-      const id = "reply-randomId";
-      const owner = "user-10-digitId";
+      const replyId = "reply-randomId";
       const commentId = "comment-10-digitId";
-      const username = "dicoding";
-      await RepliesTableTestHelper.addReplyAndParent({
-        id: `${id}1`,
-        owner,
-        content: "balasan pertama",
-        commentId,
-        username,
+      const expected = [
+        {
+          id: `${replyId}1`,
+          username: "dicoding",
+          content: "Ini adalah Komentar 1",
+          created_at: new Date("2021-08-08T07:22:33.555Z"),
+          commentId,
+          is_deleted: false,
+        },
+        {
+          id: `${replyId}2`,
+          username: "dicoding",
+          content: "Ini adalah Komentar 2",
+          created_at: new Date("2021-09-08T07:22:33.555Z"),
+          commentId,
+          is_deleted: true,
+        },
+      ];
+
+      await RepliesTableTestHelper.addReply({
+        id: `${replyId}1`,
+        content: "Ini adalah Komentar 1",
+        date: new Date("2021-08-08T07:22:33.555Z"),
       });
       await RepliesTableTestHelper.addReply({
-        id: `${id}2`,
-        content: "balasan kedua",
-        commentId,
-        owner,
+        id: `${replyId}2`,
+        content: "Ini adalah Komentar 2",
+        date: new Date("2021-09-08T07:22:33.555Z"),
       });
 
-      await RepliesTableTestHelper.deleteReplyById(`${id}2`);
+      await RepliesTableTestHelper.deleteReplyById(`${replyId}2`);
 
-      const { replies } = await replyRepositoryPostgres.getRepliesByCommentId(
-        commentId
-      );
+      const replies = await replyRepositoryPostgres.getRepliesByCommentsId([
+        commentId,
+      ]);
 
-      expect(replies[0].id).toEqual(`${id}1`);
-      expect(replies[0].username).toEqual(username);
-      expect(replies[0].content).toEqual("balasan pertama");
-      expect(replies[0].date).toBeInstanceOf(Date);
-      expect(replies[0].date).toBeDefined();
-
-      expect(replies[1].id).toEqual(`${id}2`);
-      expect(replies[1].username).toEqual(username);
-      expect(replies[1].content).toEqual("**balasan telah dihapus**");
-      expect(replies[1].date).toBeInstanceOf(Date);
-      expect(replies[1].date).toBeDefined();
+      expect(replies).toStrictEqual(expected);
     });
   });
 });
