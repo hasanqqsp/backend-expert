@@ -58,7 +58,7 @@ describe("GetThreadUseCase", () => {
       Promise.resolve(mockRetrievedComments)
     );
 
-    mockReplyRepository.getRepliesByCommentsId = jest.fn((id) =>
+    mockReplyRepository.getRepliesByCommentsId = jest.fn(() =>
       Promise.resolve(mockRepliesOnComments)
     );
 
